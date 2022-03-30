@@ -1,0 +1,47 @@
+menu "Hardware Drivers Config"
+
+config SOC_STM32F103RC
+    bool
+    select SOC_SERIES_STM32F1
+    select RT_USING_COMPONENTS_INIT
+    select RT_USING_USER_MAIN
+    default y
+
+menu "Onboard Peripheral Drivers"
+
+	config BSP_USING_DEBUG_UART
+        bool "Enable DEBUG UART"
+        select BSP_USING_UART3
+        default y
+
+    config BSP_USING_SPI_FLASH
+        bool "Enable SPI FLASH (GD25Q16 spi1)"
+        select BSP_USING_SPI
+        select BSP_USING_SPI1
+        select RT_USING_SFUD
+        select RT_SFUD_USING_SFDP
+        default y
+
+endmenu
+
+menu "On-chip Peripheral Drivers"
+
+    config BSP_USING_GPIO
+        bool "Enable GPIO"
+        select RT_USING_PIN
+        default y
+
+    config BSP_USING_UART3
+        bool "Enable UART3"
+        select RT_USING_SERIAL
+		default y
+
+    source "libraries/HAL_Drivers/Kconfig"
+       
+endmenu
+
+menu "Board extended module Drivers"
+
+endmenu
+
+endmenu
