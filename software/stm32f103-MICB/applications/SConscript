@@ -3,8 +3,12 @@ Import('rtconfig')
 from building import *
 
 cwd = GetCurrentDir()
-src = Glob('*.c')
-CPPPATH = [cwd, str(Dir('#'))]
+src = Glob('./src/*.c')
+
+
+path =  [cwd]
+path += [cwd + '/inc']
+CPPPATH = path + [str(Dir('#'))]
 
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 

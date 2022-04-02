@@ -21,6 +21,35 @@ menu "Onboard Peripheral Drivers"
         select RT_USING_SFUD
         select RT_SFUD_USING_SFDP
         default y
+		
+	menuconfig BSP_USING_ETH
+        bool "Enable Ethernet Driver (spi2)"
+        default n
+        select PKG_USING_WIZNET
+        select WIZNET_DEVICE_EXTERN_CONFIG
+        select BSP_USING_SPI2
+        if BSP_USING_ETH
+            if WIZNET_DEVICE_EXTERN_CONFIG
+                config WIZ_SPI_DEVICE
+                    string "wiz spi device"
+                    default "spi20"
+
+                config WIZ_RST_PIN
+                    int "wiz rst pin"
+					range 0 144
+                    default 56
+
+                config WIZ_IRQ_PIN
+                    int "wiz irq pin"
+					range 0 144
+                    default 57
+            endif
+
+            config EXTERNAL_PHY_ADDRESS
+                hex "external phy address"
+                default 0x00
+
+        endif
 
 endmenu
 
@@ -35,6 +64,79 @@ menu "On-chip Peripheral Drivers"
         bool "Enable UART3"
         select RT_USING_SERIAL
 		default y
+		
+	config BSP_USING_ON_CHIP_FLASH
+        bool "Enable on-chip FLASH"
+        default n
+
+    menuconfig BSP_USING_SPI
+        bool "Enable SPI BUS"
+        default n
+        select RT_USING_SPI
+        if BSP_USING_SPI
+            config BSP_USING_SPI1
+                bool "Enable SPI1 BUS"
+                default n
+
+            config BSP_SPI1_TX_USING_DMA
+                bool "Enable SPI1 TX DMA"
+                depends on BSP_USING_SPI1
+                default n
+                
+            config BSP_SPI1_RX_USING_DMA
+                bool "Enable SPI1 RX DMA"
+                depends on BSP_USING_SPI1
+                select BSP_SPI1_TX_USING_DMA
+                default n
+
+            config BSP_USING_SPI2
+                bool "Enable SPI2 BUS"
+                default n  
+                
+            config BSP_SPI2_TX_USING_DMA
+                bool "Enable SPI2 TX DMA"
+                depends on BSP_USING_SPI2
+                default n
+                
+            config BSP_SPI2_RX_USING_DMA
+                bool "Enable SPI2 RX DMA"
+                depends on BSP_USING_SPI2
+                select BSP_SPI2_TX_USING_DMA
+                default n
+                
+        endif
+		
+	menuconfig BSP_USING_ONCHIP_RTC
+        bool "Enable RTC"
+        select RT_USING_RTC
+        default n
+        if BSP_USING_ONCHIP_RTC
+            choice
+                prompt "Select clock source"
+                default BSP_RTC_USING_LSE
+
+                config BSP_RTC_USING_LSE
+                    bool "RTC USING LSE"
+
+                config BSP_RTC_USING_LSI
+                    bool "RTC USING LSI"
+            endchoice
+        endif
+
+    config BSP_USING_WDT
+        bool "Enable Watchdog Timer"
+        select RT_USING_WDT
+        default n
+
+    menuconfig BSP_USING_CAN
+        bool "Enable CAN"
+        default n
+        select RT_USING_CAN
+        if BSP_USING_CAN
+            config BSP_USING_CAN1
+                bool "using CAN1"
+                default n
+        endif
 
     source "libraries/HAL_Drivers/Kconfig"
        

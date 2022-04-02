@@ -278,7 +278,7 @@ rt_err_t rt_device_close(rt_device_t dev)
     if (dev->ref_count != 0)
         return RT_EOK;
 
-    /* call device_close interface */
+    /* call device_close interface */ 
     if (device_close != RT_NULL)
     {
         result = device_close(dev);
