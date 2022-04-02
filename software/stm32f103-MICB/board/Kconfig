@@ -37,12 +37,12 @@ menu "Onboard Peripheral Drivers"
                 config WIZ_RST_PIN
                     int "wiz rst pin"
 					range 0 144
-                    default 56
+                    default 31
 
                 config WIZ_IRQ_PIN
                     int "wiz irq pin"
 					range 0 144
-                    default 57
+                    default 8
             endif
 
             config EXTERNAL_PHY_ADDRESS

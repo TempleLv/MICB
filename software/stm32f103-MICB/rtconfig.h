@@ -171,8 +171,8 @@
 #define WIZ_USING_W5500
 #define WIZNET_DEVICE_EXTERN_CONFIG
 #define WIZ_SPI_DEVICE "spi20"
-#define WIZ_RST_PIN 115
-#define WIZ_IRQ_PIN 124
+#define WIZ_RST_PIN 31
+#define WIZ_IRQ_PIN 8
 
 /* WIZnet network configure */
 
@@ -260,6 +260,16 @@
 
 /* entertainment: terminal games and other interesting software packages */
 
+#define PKG_USING_CRCLIB
+#define CRCLIB_USING_CRC16
+#define CRC16_USING_CONST_TABLE
+#define CRC16_POLY_A001
+#define CRC16_POLY 40961
+#define CRCLIB_USING_CRC32
+#define CRC32_USING_CONST_TABLE
+#define CRC32_POLY_EDB88320
+#define CRC32_POLY 3988292384
+#define PKG_USING_CRCLIB_V102
 #define SOC_FAMILY_STM32
 #define SOC_SERIES_STM32F1
 
@@ -287,7 +297,6 @@
 #define BSP_USING_WDT
 #define BSP_USING_CAN
 #define BSP_USING_CAN1
-#define BSP_USING_UDID
 
 /* Board extended module Drivers */
 

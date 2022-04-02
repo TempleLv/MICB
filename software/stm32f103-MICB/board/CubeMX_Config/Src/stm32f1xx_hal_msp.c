@@ -23,7 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "drv_common.h"
 /* USER CODE END Includes */
-DMA_HandleTypeDef hdma_adc1;
+extern DMA_HandleTypeDef hdma_adc1;
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
