@@ -171,7 +171,7 @@
 #define WIZ_USING_W5500
 #define WIZNET_DEVICE_EXTERN_CONFIG
 #define WIZ_SPI_DEVICE "spi20"
-#define WIZ_RST_PIN 31
+#define WIZ_RST_PIN 18
 #define WIZ_IRQ_PIN 8
 
 /* WIZnet network configure */

@@ -91,6 +91,8 @@ void Error_Handler(void);
 #define Mpwm_1_GPIO_Port GPIOB
 #define Mpwm_2_Pin GPIO_PIN_11
 #define Mpwm_2_GPIO_Port GPIOB
+#define SPI2_CS_Pin GPIO_PIN_12
+#define SPI2_CS_GPIO_Port GPIOB
 #define Vpwm_1_Pin GPIO_PIN_6
 #define Vpwm_1_GPIO_Port GPIOC
 #define Vpwm_2_Pin GPIO_PIN_7
@@ -101,6 +103,8 @@ void Error_Handler(void);
 #define Vpwm_4_GPIO_Port GPIOC
 #define INTn_Pin GPIO_PIN_8
 #define INTn_GPIO_Port GPIOA
+#define SPI1_CS_Pin GPIO_PIN_15
+#define SPI1_CS_GPIO_Port GPIOA
 #define debug_TX_Pin GPIO_PIN_10
 #define debug_TX_GPIO_Port GPIOC
 #define debug_RX_Pin GPIO_PIN_11
