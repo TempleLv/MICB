@@ -15,12 +15,42 @@
 #include "spi_flash_sfud.h"
 #include "wiz.h"
 #include "crc32.h"
+#include "AP_ctrl.h"
 
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 DMA_HandleTypeDef hdma_adc1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+
+typedef enum
+{
+  PWM_Vpwm_1 = 0U,
+	PWM_Vpwm_2,
+	PWM_Vpwm_3,
+	PWM_Vpwm_4,
+	PWM_Mpwm_1,
+	PWM_Mpwm_2,
+	PWM_Ipwm_1,
+	PWM_Ipwm_2
+}PWM_CHN;
+
+
+typedef struct tag_pwm_handSet{
+	TIM_HandleTypeDef *hTim;
+	uint32_t Channel;
+}pwm_handSet;
+
+static const pwm_handSet pwmhs[] = {
+	{&htim3, TIM_CHANNEL_1},
+	{&htim3, TIM_CHANNEL_2},
+	{&htim3, TIM_CHANNEL_3},
+	{&htim3, TIM_CHANNEL_4},
+	{&htim2, TIM_CHANNEL_3},
+	{&htim2, TIM_CHANNEL_4},
+	{&htim2, TIM_CHANNEL_2},
+	{&htim2, TIM_CHANNEL_1},
+};
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim);
 
@@ -323,13 +353,104 @@ static void MX_TIM3_Init(void)
 
 }
 
+void pwm_set(TIM_HandleTypeDef *hTim, uint32_t Channel, float duty)
+{
+	TIM_OC_InitTypeDef sConfig;
+	
+	sConfig.OCMode       = TIM_OCMODE_PWM1;
+  sConfig.OCPolarity   = TIM_OCPOLARITY_HIGH;
+  sConfig.OCFastMode   = TIM_OCFAST_DISABLE;
+
+
+  /* Set the pulse value for channel 1 */
+	if(duty >= 1)
+	{
+		sConfig.Pulse = hTim->Init.Period+1;
+	}
+	else if(duty < 0)
+	{
+		sConfig.Pulse = 0;
+	}
+	else
+	{
+		sConfig.Pulse = (hTim->Init.Period)*duty;
+	}
+	
+	if(HAL_TIM_ReadCapturedValue(hTim, Channel) == sConfig.Pulse)
+	{
+		return;
+	}
+	
+  if (HAL_TIM_PWM_ConfigChannel(hTim, &sConfig, Channel) != HAL_OK)
+  {
+    /* Configuration Error */
+    Error_Handler();
+  }
+	
+	if (HAL_TIM_PWM_Start(hTim, Channel) != HAL_OK)
+  {
+    /* PWM Generation Error */
+    Error_Handler();
+  }
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+
+}
+
+void pwm_sample_set(uint32_t Channel, float duty)
+{
+	pwm_set(pwmhs[Channel].hTim, pwmhs[Channel].Channel, duty);
+}
+
+
+uint16_t ad_buf[64] = {0};
+
+void DMA1_Channel1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_adc1);
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 1 */
+}
+
 static void Vout_entry(void *parameter)
 {
+	pwm_sample_set(PWM_Vpwm_1, 0.5);
+	pwm_sample_set(PWM_Vpwm_2, 0.5);
+	
+	pwm_sample_set(PWM_Ipwm_1, 0.5);
+	pwm_sample_set(PWM_Ipwm_2, 0.5);
+	
+	rt_thread_mdelay(1000);
+	HAL_ADCEx_Calibration_Start(&hadc1); 
+	HAL_ADCEx_Calibration_Start(&hadc2); 
+	HAL_ADC_Start(&hadc2);
+	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t *)ad_buf, 32);
+	
+
+	
 	
 }
 
 int AP_init(void)
 {
+	MX_DMA_Init();
 	MX_ADC1_Init();
 	MX_ADC2_Init();
 	MX_TIM2_Init();
@@ -338,7 +459,10 @@ int AP_init(void)
 	rt_thread_t tid = rt_thread_create("Vout", Vout_entry, RT_NULL,
                            4*1024, 8, 20);
 	
-	
+	if (tid != RT_NULL)
+	{
+			rt_thread_startup(tid);
+	}
 
 	return RT_EOK;
 }
