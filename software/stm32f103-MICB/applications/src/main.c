@@ -36,7 +36,7 @@ void wiz_user_config_mac(char *mac_buf, rt_uint8_t buf_len)
 	rt_snprintf(mac_buf, buf_len, "00-08-%02X-%02X-%02X-%02X", pMac[0], pMac[1], pMac[2], pMac[3]);
 }
 
-int main(void)
+int MICB_device_init()
 {
 	//init RLY
 	rt_pin_mode(RLY_1_PIN, PIN_MODE_OUTPUT);
@@ -50,13 +50,21 @@ int main(void)
 	rt_pin_mode(RD_PIN, PIN_MODE_OUTPUT);
 	rt_pin_write(RD_PIN, PIN_LOW);
 	
-	//init GD25Q16
+	//init GD25Q16 spi
 	rt_hw_spi_device_attach("spi1", "spi10", GPIOA, GPIO_PIN_15);
-	rt_sfud_flash_probe("GD25Q16", "spi10");
 	
-	//init W5500
+	//init W5500 spi
 	rt_hw_spi_device_attach("spi2", "spi20", GPIOB, GPIO_PIN_12);
-	wiz_init();
+	
+	return 0;
+}
+
+
+int main(void)
+{
+	
+	rt_sfud_flash_probe("GD25Q16", "spi10");
+
 
 	while (1)
 	{
@@ -65,3 +73,6 @@ int main(void)
 
 	return RT_EOK;
 }
+
+
+INIT_DEVICE_EXPORT(MICB_device_init);

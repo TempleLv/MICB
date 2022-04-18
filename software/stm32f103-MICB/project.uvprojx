@@ -399,14 +399,14 @@
           <GroupName>CPU</GroupName>
           <Files>
             <File>
-              <FileName>backtrace.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\libcpu\arm\common\backtrace.c</FilePath>
-            </File>
-            <File>
               <FileName>showmem.c</FileName>
               <FileType>1</FileType>
               <FilePath>rt-thread\libcpu\arm\common\showmem.c</FilePath>
+            </File>
+            <File>
+              <FileName>backtrace.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\libcpu\arm\common\backtrace.c</FilePath>
             </File>
             <File>
               <FileName>div0.c</FileName>
@@ -429,9 +429,19 @@
           <GroupName>crclib</GroupName>
           <Files>
             <File>
+              <FileName>crc16_ex_sample.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\crclib-v1.02\src\crc16_ex_sample.c</FilePath>
+            </File>
+            <File>
               <FileName>crc16_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>packages\crclib-v1.02\src\crc16_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\crclib-v1.02\src\crc32.c</FilePath>
             </File>
             <File>
               <FileName>crc8_ex.c</FileName>
@@ -444,24 +454,14 @@
               <FilePath>packages\crclib-v1.02\src\crc8.c</FilePath>
             </File>
             <File>
-              <FileName>crc16_ex_sample.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\crclib-v1.02\src\crc16_ex_sample.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc16.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\crclib-v1.02\src\crc16.c</FilePath>
-            </File>
-            <File>
               <FileName>crc32_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>packages\crclib-v1.02\src\crc32_ex.c</FilePath>
             </File>
             <File>
-              <FileName>crc32.c</FileName>
+              <FileName>crc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>packages\crclib-v1.02\src\crc32.c</FilePath>
+              <FilePath>packages\crclib-v1.02\src\crc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -613,16 +613,6 @@
               <FilePath>rt-thread\components\drivers\spi\spi_dev.c</FilePath>
             </File>
             <File>
-              <FileName>dataqueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\components\drivers\src\dataqueue.c</FilePath>
-            </File>
-            <File>
-              <FileName>completion.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\components\drivers\src\completion.c</FilePath>
-            </File>
-            <File>
               <FileName>pipe.c</FileName>
               <FileType>1</FileType>
               <FilePath>rt-thread\components\drivers\src\pipe.c</FilePath>
@@ -638,6 +628,11 @@
               <FilePath>rt-thread\components\drivers\src\ringbuffer.c</FilePath>
             </File>
             <File>
+              <FileName>dataqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\components\drivers\src\dataqueue.c</FilePath>
+            </File>
+            <File>
               <FileName>workqueue.c</FileName>
               <FileType>1</FileType>
               <FilePath>rt-thread\components\drivers\src\workqueue.c</FilePath>
@@ -646,6 +641,11 @@
               <FileName>waitqueue.c</FileName>
               <FileType>1</FileType>
               <FilePath>rt-thread\components\drivers\src\waitqueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>completion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\components\drivers\src\completion.c</FilePath>
             </File>
             <File>
               <FileName>watchdog.c</FileName>
@@ -688,9 +688,9 @@
               <FilePath>libraries\HAL_Drivers\drv_can.c</FilePath>
             </File>
             <File>
-              <FileName>drv_adc.c</FileName>
+              <FileName>drv_rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>libraries\HAL_Drivers\drv_adc.c</FilePath>
+              <FilePath>libraries\HAL_Drivers\drv_rtc.c</FilePath>
             </File>
             <File>
               <FileName>drv_spi.c</FileName>
@@ -703,14 +703,14 @@
               <FilePath>libraries\HAL_Drivers\drv_wdt.c</FilePath>
             </File>
             <File>
+              <FileName>drv_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>libraries\HAL_Drivers\drv_adc.c</FilePath>
+            </File>
+            <File>
               <FileName>drv_crypto.c</FileName>
               <FileType>1</FileType>
               <FilePath>libraries\HAL_Drivers\drv_crypto.c</FilePath>
-            </File>
-            <File>
-              <FileName>drv_rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>libraries\HAL_Drivers\drv_rtc.c</FilePath>
             </File>
             <File>
               <FileName>drv_usart.c</FileName>
@@ -802,9 +802,19 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>fal_partition.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\fal-v1.0.0\src\fal_partition.c</FilePath>
+            </File>
+            <File>
               <FileName>fal_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>packages\fal-v1.0.0\src\fal_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>fal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\fal-v1.0.0\src\fal.c</FilePath>
             </File>
             <File>
               <FileName>fal_flash_sfud_port.c</FileName>
@@ -815,16 +825,6 @@
               <FileName>fal_rtt.c</FileName>
               <FileType>1</FileType>
               <FilePath>packages\fal-v1.0.0\src\fal_rtt.c</FilePath>
-            </File>
-            <File>
-              <FileName>fal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\fal-v1.0.0\src\fal.c</FilePath>
-            </File>
-            <File>
-              <FileName>fal_partition.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\fal-v1.0.0\src\fal_partition.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -897,14 +897,24 @@
           <GroupName>FlashDB</GroupName>
           <Files>
             <File>
-              <FileName>fdb_kvdb.c</FileName>
+              <FileName>fdb_tsdb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>packages\FlashDB-v1.1.2\src\fdb_kvdb.c</FilePath>
+              <FilePath>packages\FlashDB-v1.1.2\src\fdb_tsdb.c</FilePath>
             </File>
             <File>
               <FileName>fdb.c</FileName>
               <FileType>1</FileType>
               <FilePath>packages\FlashDB-v1.1.2\src\fdb.c</FilePath>
+            </File>
+            <File>
+              <FileName>fdb_kvdb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\FlashDB-v1.1.2\src\fdb_kvdb.c</FilePath>
+            </File>
+            <File>
+              <FileName>fdb_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\FlashDB-v1.1.2\src\fdb_cmd.c</FilePath>
             </File>
             <File>
               <FileName>fdb_file.c</FileName>
@@ -916,65 +926,15 @@
               <FileType>1</FileType>
               <FilePath>packages\FlashDB-v1.1.2\src\fdb_utils.c</FilePath>
             </File>
-            <File>
-              <FileName>fdb_cmd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\FlashDB-v1.1.2\src\fdb_cmd.c</FilePath>
-            </File>
-            <File>
-              <FileName>fdb_tsdb.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\FlashDB-v1.1.2\src\fdb_tsdb.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Kernel</GroupName>
           <Files>
             <File>
-              <FileName>object.c</FileName>
+              <FileName>thread.c</FileName>
               <FileType>1</FileType>
-              <FilePath>rt-thread\src\object.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\src\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\src\clock.c</FilePath>
-            </File>
-            <File>
-              <FileName>scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\src\scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>components.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\src\components.c</FilePath>
-            </File>
-            <File>
-              <FileName>ipc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\src\ipc.c</FilePath>
-            </File>
-            <File>
-              <FileName>idle.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\src\idle.c</FilePath>
-            </File>
-            <File>
-              <FileName>irq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\src\irq.c</FilePath>
-            </File>
-            <File>
-              <FileName>mempool.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\src\mempool.c</FilePath>
+              <FilePath>rt-thread\src\thread.c</FilePath>
             </File>
             <File>
               <FileName>device.c</FileName>
@@ -982,19 +942,59 @@
               <FilePath>rt-thread\src\device.c</FilePath>
             </File>
             <File>
+              <FileName>idle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\src\idle.c</FilePath>
+            </File>
+            <File>
+              <FileName>mempool.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\src\mempool.c</FilePath>
+            </File>
+            <File>
+              <FileName>clock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\src\clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>components.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\src\components.c</FilePath>
+            </File>
+            <File>
               <FileName>mem.c</FileName>
               <FileType>1</FileType>
               <FilePath>rt-thread\src\mem.c</FilePath>
             </File>
             <File>
-              <FileName>thread.c</FileName>
+              <FileName>ipc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>rt-thread\src\thread.c</FilePath>
+              <FilePath>rt-thread\src\ipc.c</FilePath>
+            </File>
+            <File>
+              <FileName>scheduler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\src\scheduler.c</FilePath>
+            </File>
+            <File>
+              <FileName>object.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\src\object.c</FilePath>
             </File>
             <File>
               <FileName>kservice.c</FileName>
               <FileType>1</FileType>
               <FilePath>rt-thread\src\kservice.c</FilePath>
+            </File>
+            <File>
+              <FileName>irq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\src\irq.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\src\timer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1002,9 +1002,9 @@
           <GroupName>libc</GroupName>
           <Files>
             <File>
-              <FileName>syscalls.c</FileName>
+              <FileName>libc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>rt-thread\components\libc\compilers\armlibc\syscalls.c</FilePath>
+              <FilePath>rt-thread\components\libc\compilers\armlibc\libc.c</FilePath>
             </File>
             <File>
               <FileName>mem_std.c</FileName>
@@ -1017,19 +1017,14 @@
               <FilePath>rt-thread\components\libc\compilers\armlibc\stdio.c</FilePath>
             </File>
             <File>
-              <FileName>libc.c</FileName>
+              <FileName>syscalls.c</FileName>
               <FileType>1</FileType>
-              <FilePath>rt-thread\components\libc\compilers\armlibc\libc.c</FilePath>
+              <FilePath>rt-thread\components\libc\compilers\armlibc\syscalls.c</FilePath>
             </File>
             <File>
-              <FileName>time.c</FileName>
+              <FileName>delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>rt-thread\components\libc\compilers\common\time.c</FilePath>
-            </File>
-            <File>
-              <FileName>stdlib.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\components\libc\compilers\common\stdlib.c</FilePath>
+              <FilePath>rt-thread\components\libc\compilers\common\delay.c</FilePath>
             </File>
             <File>
               <FileName>unistd.c</FileName>
@@ -1037,9 +1032,14 @@
               <FilePath>rt-thread\components\libc\compilers\common\unistd.c</FilePath>
             </File>
             <File>
-              <FileName>delay.c</FileName>
+              <FileName>stdlib.c</FileName>
               <FileType>1</FileType>
-              <FilePath>rt-thread\components\libc\compilers\common\delay.c</FilePath>
+              <FilePath>rt-thread\components\libc\compilers\common\stdlib.c</FilePath>
+            </File>
+            <File>
+              <FileName>time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\components\libc\compilers\common\time.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1202,14 +1202,14 @@
               <FilePath>rt-thread\components\net\netdev\src\netdev.c</FilePath>
             </File>
             <File>
-              <FileName>net_netdb.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>rt-thread\components\net\sal_socket\socket\net_netdb.c</FilePath>
-            </File>
-            <File>
               <FileName>sal_socket.c</FileName>
               <FileType>1</FileType>
               <FilePath>rt-thread\components\net\sal_socket\src\sal_socket.c</FilePath>
+            </File>
+            <File>
+              <FileName>net_netdb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>rt-thread\components\net\sal_socket\socket\net_netdb.c</FilePath>
             </File>
             <File>
               <FileName>dfs_net.c</FileName>
@@ -1232,6 +1232,21 @@
               <FilePath>packages\wiznet-latest\src\wiz.c</FilePath>
             </File>
             <File>
+              <FileName>wizchip_socket.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\wiznet-latest\ioLibrary\Ethernet\wizchip_socket.c</FilePath>
+            </File>
+            <File>
+              <FileName>wizchip_conf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\wiznet-latest\ioLibrary\Ethernet\wizchip_conf.c</FilePath>
+            </File>
+            <File>
+              <FileName>wiz_ping.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\wiznet-latest\src\wiz_ping.c</FilePath>
+            </File>
+            <File>
               <FileName>wizchip_dns.c</FileName>
               <FileType>1</FileType>
               <FilePath>packages\wiznet-latest\ioLibrary\Internet\DNS\wizchip_dns.c</FilePath>
@@ -1245,21 +1260,6 @@
               <FileName>w5500.c</FileName>
               <FileType>1</FileType>
               <FilePath>packages\wiznet-latest\ioLibrary\Ethernet\W5500\w5500.c</FilePath>
-            </File>
-            <File>
-              <FileName>wiz_ping.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\wiznet-latest\src\wiz_ping.c</FilePath>
-            </File>
-            <File>
-              <FileName>wizchip_socket.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\wiznet-latest\ioLibrary\Ethernet\wizchip_socket.c</FilePath>
-            </File>
-            <File>
-              <FileName>wizchip_conf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>packages\wiznet-latest\ioLibrary\Ethernet\wizchip_conf.c</FilePath>
             </File>
             <File>
               <FileName>wiz_af_inet.c</FileName>
