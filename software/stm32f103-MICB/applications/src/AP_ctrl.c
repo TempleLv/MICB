@@ -97,7 +97,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_6;
+  sConfig.Channel = ADC_CHANNEL_15;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_55CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
@@ -107,7 +107,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Channel = ADC_CHANNEL_9;
   sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -116,7 +116,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_4;
+  sConfig.Channel = ADC_CHANNEL_6;
   sConfig.Rank = ADC_REGULAR_RANK_3;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -125,7 +125,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_5;
+  sConfig.Channel = ADC_CHANNEL_4;
   sConfig.Rank = ADC_REGULAR_RANK_4;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -171,7 +171,7 @@ static void MX_ADC2_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_15;
+  sConfig.Channel = ADC_CHANNEL_14;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_55CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
@@ -181,7 +181,7 @@ static void MX_ADC2_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_14;
+  sConfig.Channel = ADC_CHANNEL_8;
   sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
   {
@@ -190,7 +190,7 @@ static void MX_ADC2_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_9;
+  sConfig.Channel = ADC_CHANNEL_7;
   sConfig.Rank = ADC_REGULAR_RANK_3;
   if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
   {
@@ -199,7 +199,7 @@ static void MX_ADC2_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_8;
+  sConfig.Channel = ADC_CHANNEL_5;
   sConfig.Rank = ADC_REGULAR_RANK_4;
   if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
   {
@@ -353,7 +353,7 @@ static void MX_TIM3_Init(void)
 
 }
 
-void pwm_set(TIM_HandleTypeDef *hTim, uint32_t Channel, float duty)
+void pwm_set(TIM_HandleTypeDef *hTim, uint32_t Channel, float duty, int start)
 {
 	TIM_OC_InitTypeDef sConfig;
 	
@@ -381,17 +381,14 @@ void pwm_set(TIM_HandleTypeDef *hTim, uint32_t Channel, float duty)
 		return;
 	}
 	
-  if (HAL_TIM_PWM_ConfigChannel(hTim, &sConfig, Channel) != HAL_OK)
-  {
-    /* Configuration Error */
-    Error_Handler();
-  }
+	__HAL_TIM_SetCompare(hTim, Channel, sConfig.Pulse);
 	
-	if (HAL_TIM_PWM_Start(hTim, Channel) != HAL_OK)
-  {
-    /* PWM Generation Error */
-    Error_Handler();
-  }
+	if(start == 1)
+		if (HAL_TIM_PWM_Start(hTim, Channel) != HAL_OK)
+		{
+			/* PWM Generation Error */
+			Error_Handler();
+		}
 }
 
 /**
@@ -405,18 +402,18 @@ static void MX_DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
 }
 
-void pwm_sample_set(uint32_t Channel, float duty)
+void pwm_sample_set(uint32_t Channel, float duty, int start)
 {
-	pwm_set(pwmhs[Channel].hTim, pwmhs[Channel].Channel, duty);
+	pwm_set(pwmhs[Channel].hTim, pwmhs[Channel].Channel, duty, start);
 }
 
 
-uint16_t ad_buf[64] = {0};
+uint16_t ad_buf[80] = {0};
 
 void DMA1_Channel1_IRQHandler(void)
 {
@@ -431,20 +428,46 @@ void DMA1_Channel1_IRQHandler(void)
 
 static void Vout_entry(void *parameter)
 {
-	pwm_sample_set(PWM_Vpwm_1, 0.5);
-	pwm_sample_set(PWM_Vpwm_2, 0.5);
+	pwm_sample_set(PWM_Vpwm_1, 0.1, 1);
+	pwm_sample_set(PWM_Vpwm_2, 0.2, 1);
+	pwm_sample_set(PWM_Vpwm_3, 0.3, 1);
+	pwm_sample_set(PWM_Vpwm_4, 0.4, 1);
 	
-	pwm_sample_set(PWM_Ipwm_1, 0.5);
-	pwm_sample_set(PWM_Ipwm_2, 0.5);
 	
-	rt_thread_mdelay(1000);
+	pwm_sample_set(PWM_Ipwm_1, 0.5, 1);
+	pwm_sample_set(PWM_Ipwm_2, 0.5, 1);
+	
 	HAL_ADCEx_Calibration_Start(&hadc1); 
 	HAL_ADCEx_Calibration_Start(&hadc2); 
 	HAL_ADC_Start(&hadc2);
-	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t *)ad_buf, 32);
+	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t *)ad_buf, sizeof(ad_buf)/sizeof(uint32_t));
 	
 
-	
+//vin vout test
+//	float x = 0;
+//	while(1){
+//		x += 0.001;
+//		pwm_sample_set(PWM_Vpwm_1, x, 0);
+//		rt_thread_mdelay(100);
+//		char buf[128] = "";
+//		snprintf(buf, sizeof(buf), "Vout_1:%.2f  Ain_1:%.2f duty:%.2f", ad_buf[0]/4096.0*3.3 / (1/3.4), ad_buf[4]/4096.0*3.3 / (40.2/140.2), x);
+//		LOG_I(buf);
+//		if(x >= 1)
+//			x = 0;
+//	}
+
+//Iin Iout test
+//	float x = 0;
+//	while(1){
+//		x += 0.01;
+//		pwm_sample_set(PWM_Ipwm_1, x, 0);
+//		rt_thread_mdelay(500);
+//		char buf[128] = "";
+//		snprintf(buf, sizeof(buf), "Iout_1:%.2f  Ain_3:%.2f duty:%.2f", x*20.0, ad_buf[6]/4096.0*3.3 / (40.2/140.2) / 250 * 1000, x);
+//		LOG_I(buf);
+//		if(x >= 1)
+//			x = 0;
+//	}
 	
 }
 
