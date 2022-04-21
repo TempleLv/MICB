@@ -71,7 +71,14 @@ int main(void)
 
 //	while (1)
 //	{
-//		rt_thread_mdelay(500);
+//		rt_pin_write(RLY_1_PIN, PIN_LOW);
+//		rt_pin_write(RLY_2_PIN, PIN_LOW);
+//		rt_pin_write(RLY_3_PIN, PIN_LOW);
+//		rt_thread_mdelay(1000);
+//		rt_pin_write(RLY_1_PIN, PIN_HIGH);
+//		rt_pin_write(RLY_2_PIN, PIN_HIGH);
+//		rt_pin_write(RLY_3_PIN, PIN_HIGH);
+//		rt_thread_mdelay(1000);
 //	}
 
 	return RT_EOK;
