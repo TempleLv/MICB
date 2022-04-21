@@ -437,38 +437,44 @@ static void Vout_entry(void *parameter)
 	pwm_sample_set(PWM_Ipwm_1, 0.5, 1);
 	pwm_sample_set(PWM_Ipwm_2, 0.5, 1);
 	
+	pwm_sample_set(PWM_Mpwm_1, 0.05, 1);
+	pwm_sample_set(PWM_Mpwm_2, 0.05, 1);
+	
 	HAL_ADCEx_Calibration_Start(&hadc1); 
 	HAL_ADCEx_Calibration_Start(&hadc2); 
 	HAL_ADC_Start(&hadc2);
 	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t *)ad_buf, sizeof(ad_buf)/sizeof(uint32_t));
 	
 
-//vin vout test
-//	float x = 0;
-//	while(1){
-//		x += 0.001;
-//		pwm_sample_set(PWM_Vpwm_1, x, 0);
-//		rt_thread_mdelay(100);
-//		char buf[128] = "";
-//		snprintf(buf, sizeof(buf), "Vout_1:%.2f  Ain_1:%.2f duty:%.2f", ad_buf[0]/4096.0*3.3 / (1/3.4), ad_buf[4]/4096.0*3.3 / (40.2/140.2), x);
-//		LOG_I(buf);
-//		if(x >= 1)
-//			x = 0;
-//	}
-
-//Iin Iout test
-//	float x = 0;
-//	while(1){
-//		x += 0.01;
-//		pwm_sample_set(PWM_Ipwm_1, x, 0);
-//		rt_thread_mdelay(500);
-//		char buf[128] = "";
-//		snprintf(buf, sizeof(buf), "Iout_1:%.2f  Ain_3:%.2f duty:%.2f", x*20.0, ad_buf[6]/4096.0*3.3 / (40.2/140.2) / 250 * 1000, x);
-//		LOG_I(buf);
-//		if(x >= 1)
-//			x = 0;
-//	}
-	
+//analog test
+	float x = 0;
+	while(1){
+		x += 0.001;
+		for(int i=0; i<4; i++){
+			pwm_sample_set(PWM_Vpwm_1+i, x, 0);
+		}
+		
+		for(int i=0; i<2; i++){
+			pwm_sample_set(PWM_Ipwm_1+i, x, 0);
+		}
+			
+		rt_thread_mdelay(20);
+		
+		for(int i=0; i<4; i++){
+			char buf[128] = "";
+			snprintf(buf, sizeof(buf), "Vout_%d:%.2f  Ain_%d:%.2f duty:%.2f", i+1, ad_buf[0]/4096.0*3.3 / (1/3.4), i+1, ad_buf[4+i]/4096.0*3.3 / (40.2/140.2), x);
+			LOG_I(buf);
+		}
+		
+		for(int i=0; i<2; i++){
+			char buf[128] = "";
+			snprintf(buf, sizeof(buf), "Iout_%d:%.2f  Ain_%d:%.2f duty:%.2f", i+1, x*20.0, i+3, ad_buf[6+i]/4096.0*3.3 / (40.2/140.2) / 250 * 1000, x);
+			LOG_I(buf);
+		}
+		
+		if(x >= 1)
+			x = 0;
+	}
 }
 
 int AP_init(void)

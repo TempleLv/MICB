@@ -13,6 +13,39 @@ menu "Onboard Peripheral Drivers"
         bool "Enable DEBUG UART"
         select BSP_USING_UART3
         default y
+		
+	menuconfig BSP_USING_UART
+        bool "Enable UART"
+        default y
+        select RT_USING_SERIAL
+        if BSP_USING_UART
+            config BSP_USING_UART1
+                bool "Enable UART1"
+                default n
+
+            config BSP_UART1_RX_USING_DMA
+                bool "Enable UART1 RX DMA"
+                depends on BSP_USING_UART1 && RT_SERIAL_USING_DMA
+                default n
+
+            config BSP_USING_UART2
+                bool "Enable UART2"
+                default n
+
+            config BSP_UART2_RX_USING_DMA
+                bool "Enable UART2 RX DMA"
+                depends on BSP_USING_UART2 && RT_SERIAL_USING_DMA
+                default n
+                
+            config BSP_USING_UART5
+                bool "Enable UART5"
+                default n
+
+            config BSP_UART5_RX_USING_DMA
+                bool "Enable UART5 RX DMA"
+                depends on BSP_USING_UART5 && RT_SERIAL_USING_DMA
+                default n  
+        endif	
 
     config BSP_USING_SPI_FLASH
         bool "Enable SPI FLASH (GD25Q16 spi1)"

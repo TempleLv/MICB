@@ -280,6 +280,10 @@
 /* Onboard Peripheral Drivers */
 
 #define BSP_USING_DEBUG_UART
+#define BSP_USING_UART
+#define BSP_USING_UART1
+#define BSP_USING_UART2
+#define BSP_USING_UART5
 #define BSP_USING_SPI_FLASH
 #define BSP_USING_ETH
 #define EXTERNAL_PHY_ADDRESS 0x00
