@@ -17,6 +17,7 @@
 #include "crc32.h"
 #include "AP_ctrl.h"
 #include "serial_ctrl.h"
+#include <flashdb.h>
 
 /* defined the LED0 pin: PB1 */
 //#define LED0_PIN    GET_PIN(B, 1)
@@ -24,6 +25,18 @@
 #define RLY_2_PIN    	GET_PIN(C, 2)
 #define RLY_3_PIN    	GET_PIN(C, 3)
 #define RD_PIN    		GET_PIN(B, 6)
+
+struct fdb_kvdb g_kvdb_env = { 0 };
+
+static void lock(fdb_db_t db)
+{
+    rt_mutex_take(db->user_data, RT_WAITING_FOREVER);
+}
+
+static void unlock(fdb_db_t db)
+{
+    rt_mutex_release(db->user_data);
+}
 
 /* set WIZnet device MAC address */
 void wiz_user_config_mac(char *mac_buf, rt_uint8_t buf_len)
@@ -66,6 +79,24 @@ int main(void)
 {
 	
 	rt_sfud_flash_probe("GD25Q16", "spi10");
+	int mode = 1;
+	
+	struct fdb_default_kv default_kv;
+	struct fdb_default_kv_node default_kv_table[] = {
+		{"up", "0", 0}, /* string KV */
+		{"mode", &mode, sizeof(mode)},
+	};
+	
+	rt_mutex_t dynamic_mutex = rt_mutex_create("flashdb", RT_IPC_FLAG_FIFO);
+
+	default_kv.kvs = default_kv_table;
+	default_kv.num = sizeof(default_kv_table) / sizeof(default_kv_table[0]);
+
+	fdb_kvdb_control(&g_kvdb_env, FDB_KVDB_CTRL_SET_LOCK, (void *)lock);
+	fdb_kvdb_control(&g_kvdb_env, FDB_KVDB_CTRL_SET_UNLOCK, (void *)unlock);
+	fdb_kvdb_init(&g_kvdb_env, "env", "env", &default_kv, dynamic_mutex);
+
+	
 	AP_init();
 	serial_init();
 

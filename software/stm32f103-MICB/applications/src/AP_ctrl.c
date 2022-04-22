@@ -448,7 +448,7 @@ static void Vout_entry(void *parameter)
 
 //analog test
 	float x = 0;
-	while(1){
+	while(0){
 		x += 0.001;
 		for(int i=0; i<4; i++){
 			pwm_sample_set(PWM_Vpwm_1+i, x, 0);

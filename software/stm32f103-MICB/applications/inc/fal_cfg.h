@@ -31,10 +31,11 @@ extern struct fal_flash_dev nor_flash0;
 /* partition table */
 #define FAL_PART_TABLE                                                               \
 {                                                                                    \
-    {FAL_PART_MAGIC_WORD,        "bl",     "stm32_onchip",         0,   64*1024, 0}, \
-    {FAL_PART_MAGIC_WORD,       "app",     "stm32_onchip",   64*1024,  704*1024, 0}, \
-    {FAL_PART_MAGIC_WORD, "easyflash", NOR_FLASH_DEV_NAME,         0, 1024*1024, 0}, \
-    {FAL_PART_MAGIC_WORD,  "download", NOR_FLASH_DEV_NAME, 1024*1024, 1024*1024, 0}, \
+    {FAL_PART_MAGIC_WORD,       "bl",   "onchip_flash",         0,   		32*1024, 0}, \
+    {FAL_PART_MAGIC_WORD,       "app",  "onchip_flash",   		32*1024,  	224*1024, 0}, \
+    {FAL_PART_MAGIC_WORD, 		"env", 	NOR_FLASH_DEV_NAME,     0, 			64*1024, 0}, \
+    {FAL_PART_MAGIC_WORD,  "download", 	NOR_FLASH_DEV_NAME, 	64*1024, 	256*1024, 0}, \
+		{FAL_PART_MAGIC_WORD,  "reserved", 	NOR_FLASH_DEV_NAME, 	320*1024, 	1728*1024, 0}, \
 }
 #endif /* FAL_PART_HAS_TABLE_CFG */
 
