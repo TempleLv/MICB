@@ -12,10 +12,18 @@
 #include <rtdevice.h>
 #include <board.h>
 #include "drv_spi.h"
+
+#define DBG_LEVEL                      DBG_INFO
+#include <rtdbg.h>
+
 #include "spi_flash_sfud.h"
 #include "wiz.h"
 #include "crc32.h"
 #include "AP_ctrl.h"
+#include "pid_ctrl.h"
+
+
+//#define AP_DEBUG
 
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
@@ -376,7 +384,7 @@ void pwm_set(TIM_HandleTypeDef *hTim, uint32_t Channel, float duty, int start)
 		sConfig.Pulse = (hTim->Init.Period)*duty;
 	}
 	
-	if(HAL_TIM_ReadCapturedValue(hTim, Channel) == sConfig.Pulse)
+	if(HAL_TIM_ReadCapturedValue(hTim, Channel) == sConfig.Pulse && start != 1)
 	{
 		return;
 	}
@@ -426,58 +434,100 @@ void DMA1_Channel1_IRQHandler(void)
   /* USER CODE END DMA1_Channel1_IRQn 1 */
 }
 
+double target_v = 0;
+
 static void Vout_entry(void *parameter)
 {
-	pwm_sample_set(PWM_Vpwm_1, 0.1, 1);
-	pwm_sample_set(PWM_Vpwm_2, 0.2, 1);
-	pwm_sample_set(PWM_Vpwm_3, 0.3, 1);
-	pwm_sample_set(PWM_Vpwm_4, 0.4, 1);
+	pwm_sample_set(PWM_Vpwm_1, 0.0, 1);
+	pwm_sample_set(PWM_Vpwm_2, 0.0, 1);
+	pwm_sample_set(PWM_Vpwm_3, 0.0, 1);
+	pwm_sample_set(PWM_Vpwm_4, 0.0, 1);
 	
 	
-	pwm_sample_set(PWM_Ipwm_1, 0.5, 1);
-	pwm_sample_set(PWM_Ipwm_2, 0.5, 1);
+	pwm_sample_set(PWM_Ipwm_1, 0.0, 1);
+	pwm_sample_set(PWM_Ipwm_2, 0.0, 1);
 	
-	pwm_sample_set(PWM_Mpwm_1, 0.05, 1);
-	pwm_sample_set(PWM_Mpwm_2, 0.05, 1);
+	pwm_sample_set(PWM_Mpwm_1, 0.0, 1);
+	pwm_sample_set(PWM_Mpwm_2, 0.0, 1);
 	
 	HAL_ADCEx_Calibration_Start(&hadc1); 
 	HAL_ADCEx_Calibration_Start(&hadc2); 
 	HAL_ADC_Start(&hadc2);
 	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t *)ad_buf, sizeof(ad_buf)/sizeof(uint32_t));
 	
+	
+	handle_PC pid_parm[4] = {0};
+	for(int i=0; i<sizeof(pid_parm)/sizeof(pid_parm[0]); i++){
+		pid_parm[i].m_pp.kp = 0.3;
+		pid_parm[i].m_pp.ki = 0.3;
+		pid_parm[i].m_pp.kd = 0.01;
+		pid_parm[i].m_pp.ii_up_max = 10;
+		pid_parm[i].m_pp.ii_dn_min = 0;
+		pid_parm[i].m_pp.integral_inhibition = 1;
+		pid_parm[i].m_pp.output_max = 10;
+		pid_parm[i].m_pp.output_min = 0;
+		rt_snprintf(pid_parm[i].name, sizeof(pid_parm[i].name), "Vout_%d", i+1);
+	}
+	
+	while(1)
+	{
+		double Vout_actual[4] = {0};
+		int array_size = sizeof(ad_buf)/sizeof(ad_buf[0])/8;
+		
+		for(int i=0; i<array_size; i++){
+			for(int j=0; j<4; j++){
+				Vout_actual[j] += ad_buf[i*8+j];
+			}
+		}
+		
+		for(int i=0; i<4; i++){
+			Vout_actual[i] = Vout_actual[i] / array_size /4096.0*3.3 / (1/3.4);
+			double perc = PC_realize(&pid_parm[i], Vout_actual[i], target_v) / 10.0;
+			
+#ifdef AP_DEBUG			
+			char buf[128] = "";
+			snprintf(buf, sizeof(buf), "perc_%d: %.2f", i, perc);
+			LOG_I(buf);
+#endif			
+			pwm_sample_set(PWM_Vpwm_1+i, perc, 0);
+		}
+		
+		rt_thread_mdelay(60);
+	}
+	
 
 //analog test
-	float x = 0;
-	while(0){
-		x += 0.001;
-		for(int i=0; i<4; i++){
-			pwm_sample_set(PWM_Vpwm_1+i, x, 0);
-		}
-		
-		for(int i=0; i<2; i++){
-			pwm_sample_set(PWM_Ipwm_1+i, x, 0);
-		}
-			
-		rt_thread_mdelay(20);
-		
-		for(int i=0; i<4; i++){
-			char buf[128] = "";
-			snprintf(buf, sizeof(buf), "Vout_%d:%.2f  Ain_%d:%.2f duty:%.2f", i+1, ad_buf[0]/4096.0*3.3 / (1/3.4), i+1, ad_buf[4+i]/4096.0*3.3 / (40.2/140.2), x);
-			LOG_I(buf);
-		}
-		
-		for(int i=0; i<2; i++){
-			char buf[128] = "";
-			snprintf(buf, sizeof(buf), "Iout_%d:%.2f  Ain_%d:%.2f duty:%.2f", i+1, x*20.0, i+3, ad_buf[6+i]/4096.0*3.3 / (40.2/140.2) / 250 * 1000, x);
-			LOG_I(buf);
-		}
-		
-		if(x >= 1)
-			x = 0;
-	}
+//	float x = 0;
+//	while(0){
+//		x += 0.001;
+//		for(int i=0; i<4; i++){
+//			pwm_sample_set(PWM_Vpwm_1+i, x, 0);
+//		}
+//		
+//		for(int i=0; i<2; i++){
+//			pwm_sample_set(PWM_Ipwm_1+i, x, 0);
+//		}
+//			
+//		rt_thread_mdelay(20);
+//		
+//		for(int i=0; i<4; i++){
+//			char buf[128] = "";
+//			snprintf(buf, sizeof(buf), "Vout_%d:%.2f  Ain_%d:%.2f duty:%.2f", i+1, ad_buf[0]/4096.0*3.3 / (1/3.4), i+1, ad_buf[4+i]/4096.0*3.3 / (40.2/140.2), x);
+//			LOG_I(buf);
+//		}
+//		
+//		for(int i=0; i<2; i++){
+//			char buf[128] = "";
+//			snprintf(buf, sizeof(buf), "Iout_%d:%.2f  Ain_%d:%.2f duty:%.2f", i+1, x*20.0, i+3, ad_buf[6+i]/4096.0*3.3 / (40.2/140.2) / 250 * 1000, x);
+//			LOG_I(buf);
+//		}
+//		
+//		if(x >= 1)
+//			x = 0;
+//	}
 }
 
-int AP_init(void)
+int AP_device_init()
 {
 	MX_DMA_Init();
 	MX_ADC1_Init();
@@ -485,6 +535,11 @@ int AP_init(void)
 	MX_TIM2_Init();
 	MX_TIM3_Init();
 	
+	return 0;
+}
+
+int AP_init(void)
+{
 	rt_thread_t tid = rt_thread_create("Vout", Vout_entry, RT_NULL,
                            4*1024, 8, 20);
 	
@@ -495,3 +550,6 @@ int AP_init(void)
 
 	return RT_EOK;
 }
+
+INIT_BOARD_EXPORT(AP_device_init);
+
